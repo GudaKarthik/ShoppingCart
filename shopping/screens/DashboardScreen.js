@@ -1,97 +1,51 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, FlatList, ScrollView, Alert,TouchableOpacity, TextInput } from "react-native";
+import { View, Text, StyleSheet, FlatList, ScrollView, Alert,TouchableOpacity, TextInput, Image } from "react-native";
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
+import CategoryDashboard from "./helperComponents/CategoryDashboard";
 
 const DashboardScreen = () => {
 
     const navigation = useNavigation();
     const url = "https://fakestoreapi.com/products";
     const [products, setProducts] = useState([]);
-
-    const [dashboard, setDashboard] = useState([
-        { id: 1, title: "All",image:"" },
-        { id: 2, title: "Electronics",image:"" },
-        { id: 3, title: "Jewellery",image:"" },
-        { id: 4, title: "Men",image:"" },
-        { id: 5, title: "Women",image:"" },
-        { id: 6, title: "Saved",image:"" },
-    ]);
-    
+    const [limit, setLimit] = useState(5)
 
     // Fetching Data from API
     useEffect(() => {
         axios.get(url,{
           params: {
-            "limit":5
+            "limit":limit
           }
         })
         .then((response) => {
-            console.log("The data is " + JSON.stringify(response.data));
+       //     console.log("The data is " + JSON.stringify(response.data));
             setProducts(response.data);
         })
         .catch((error) => {
             console.log("The error is " + error);
         });
-    },[]);
+    },[limit]);
 
   return (
     <View style={styles.container}>
       <ScrollView>
 
-      <Text style={{margin:10}}>This is a Shopping Cart you can shop anything.</Text>
-
-      {/* Dashboard Items */}
-      <FlatList
-      data={dashboard}
-      numColumns={2}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => 
-        {
-          if(item.title == "All"){
-            navigation.navigate('Shopping',{
-              category : "All"
-            });
-          }else if(item.title == "Electronics"){
-            navigation.navigate('Shopping',{
-              category : "electronics"
-            });
-          }else if(item.title == "Jewellery"){
-            navigation.navigate('Shopping',{
-              category : "jewelery"
-            });
-          }else if(item.title == "Men"){
-            navigation.navigate('Shopping',{
-              category : "men's clothing"
-            });
-          }else if(item.title == "Women"){
-            navigation.navigate('Shopping',{
-              category : "women's clothing"
-          })
-        }
-      }
-        }>
-        <View style={{ padding: 10 ,backgroundColor: '#004a8e', margin: 5,borderRadius: 10}}>
-          <Text style={{color:'white'}} >{item.title}</Text>
-        </View>
-        </TouchableOpacity>
-      )}
-      />
+      <Text style={styles.offerText}>Big Sale is live! 50% Off on any item above ₹ 199</Text>
       
+      {/* Category Dashboard */}
+      <CategoryDashboard />
+
+      
+      {/* Limited Shopping Items */}
       <FlatList
         data={products}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('ShoppingItem',{
-              id : item.id
-            })}
-          }>
-          <View style={{ padding: 10 ,backgroundColor: 'lightblue', margin: 5,borderRadius: 10}}>
-            <Text>{item.title}</Text>
-          </View>
-          </TouchableOpacity>
+          <LimitedProductItem
+          navigation={navigation}
+          item={item}
+          />
         )}
       />
 </ScrollView>
@@ -99,13 +53,101 @@ const DashboardScreen = () => {
   );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
-});
 
 export default DashboardScreen;
+
+const LimitedProductItem = ({navigation,item}) => {
+  return(
+    <View>
+      <TouchableOpacity onPress={() => {
+            navigation.navigate('ShoppingItem',{
+              id : item.id,
+              category : item.category
+            })}
+          }>
+          <View style={styles.morelikeProductitem}>
+
+            {/* Product Image */}
+            <Image source={{uri:item.image}}
+            style={styles.morelikeProductimage}></Image>
+
+            {/* Product Title and Price */}
+            <View style={styles.titleprice_bg}>
+
+            {/* Title */}
+            <Text style={styles.productTitle}>{item.title}</Text>
+            
+            {/* Price */}
+            <Text style={styles.productPrice}>For ₹{item.price}</Text>
+
+            </View>
+          </View>
+          </TouchableOpacity>
+    </View>
+  )
+}
+
+
+const styles = StyleSheet.create({
+
+  container: {
+      flex: 1,
+      backgroundColor: '#f2f2fc',
+      alignItems: 'center',
+      justifyContent: 'center',
+  },
+
+  offerText : {
+    margin:10,
+    borderColor:'white',
+    borderWidth:3,
+    borderRadius:15,
+    padding:10,
+    backgroundColor:'orange',
+    color:'white',
+    fontWeight:'bold',
+    fontSize:14
+  },
+
+  morelikeProductitem:{
+    padding: 0 ,
+    backgroundColor: 'white', 
+    marginLeft:6,
+    marginRight:6,
+    marginTop:10,
+    borderRadius: 20,
+    borderWidth:0.5,
+    borderColor:'lightgray'
+  },
+
+  morelikeProductimage:{
+    width:80,
+    height:80,
+    alignSelf:'center',
+    marginTop:10
+  },
+  
+  titleprice_bg: {
+    marginTop:10,
+    backgroundColor:'#fff880',
+    borderBottomRightRadius:20,
+    borderBottomLeftRadius:20
+  },
+
+  productTitle : {
+    marginTop:10,
+    marginRight:10,
+    marginLeft:10,
+    marginBottom:5,
+    alignSelf:'center',
+    fontSize:15,
+    fontWeight:'400'
+  },
+
+  productPrice : {
+    alignSelf:'center',
+    marginTop:5,
+    fontWeight:'700',
+    marginBottom:10
+  }
+});
