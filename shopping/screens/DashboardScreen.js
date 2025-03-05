@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, FlatList, ScrollView, Alert,TouchableOpacity, T
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
 import CategoryDashboard from "./helperComponents/CategoryDashboard";
+import { useContext } from "react";
+import { CartContext } from "../context/CartProvider";
 
 const DashboardScreen = () => {
 
@@ -10,9 +12,20 @@ const DashboardScreen = () => {
     const url = "https://fakestoreapi.com/products";
     const [products, setProducts] = useState([]);
     const [limit, setLimit] = useState(5)
+    const { cart } = useContext(CartContext);
+    const [cartButton,showCartButton] = useState(false);
 
     // Fetching Data from API
     useEffect(() => {
+
+      if(cart.length > 0){
+        console.log("Cart Items are there")
+        showCartButton(true);
+      }else{
+        console.log("Cart Items are not there")
+        showCartButton(false);
+      }
+
         axios.get(url,{
           params: {
             "limit":limit
@@ -25,10 +38,13 @@ const DashboardScreen = () => {
         .catch((error) => {
             console.log("The error is " + error);
         });
-    },[limit]);
+    },[limit,cart]);
 
   return (
     <View style={styles.container}>
+
+      
+
       <ScrollView>
 
       <Text style={styles.offerText}>Big Sale is live! 50% Off on any item above ₹ 199</Text>
@@ -36,6 +52,16 @@ const DashboardScreen = () => {
       {/* Category Dashboard */}
       <CategoryDashboard />
 
+       {/* Go to Cart button */}
+       <TouchableOpacity style={[styles.gotCartbtn,{display: cartButton ? 'flex' : 'none'}]}
+       onPress={() => {
+        navigation.navigate("Cartitems")
+       }}
+       >
+        <Text style={styles.cartText}>
+          Go to Cart items are waiting
+        </Text>
+      </TouchableOpacity>
       
       {/* Limited Shopping Items */}
       <FlatList
@@ -48,6 +74,7 @@ const DashboardScreen = () => {
           />
         )}
       />
+      
 </ScrollView>
     </View>
   );
@@ -126,10 +153,10 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     marginTop:10
   },
-  
+
   titleprice_bg: {
     marginTop:10,
-    backgroundColor:'#fff880',
+    backgroundColor:'#E1C16E',
     borderBottomRightRadius:20,
     borderBottomLeftRadius:20
   },
@@ -149,5 +176,20 @@ const styles = StyleSheet.create({
     marginTop:5,
     fontWeight:'700',
     marginBottom:10
-  }
+  },
+  gotCartbtn : {
+    backgroundColor:'green',
+    borderRadius:20,
+    padding:5,
+    marginRight:10,
+    marginTop:10,
+    marginLeft:10
+    
+},
+cartText : {
+    padding:10,
+    color:'white',
+    fontWeight:'700',
+    alignSelf:'center'
+}
 });
