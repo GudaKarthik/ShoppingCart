@@ -22,6 +22,7 @@ const ShoppingItemScreen = ({route}) => {
 
     const [counter,showCounter] = useState(false)
     const [count, setCount] = useState(1)
+    // Use Context Values
     const { cart, addItem,addToCart } = useContext(CartContext);
 
 
@@ -41,13 +42,15 @@ const ShoppingItemScreen = ({route}) => {
             setCount(counterValue)
         }
 
-        
-
         // Product Details
         axios.get(url)
         .then((response) => {
             setValue(true)
             setProduct(response.data)
+            // Filtering only 'Electronics' category
+        const filteredProducts = cart.find(item => item.id === response.data.id);
+
+        console.log("Filtered Products " + JSON.stringify(filteredProducts));
             setPrice(response.data.price)
             setQuanity(1)
         })
@@ -64,7 +67,9 @@ const ShoppingItemScreen = ({route}) => {
         .catch((error) => {
             console.log(error)
         })
-    },[cartItem,cart])
+
+
+    },[cartItem])
 
     // Remove the product if exist
     const filteredProducts = useMemo(() => {

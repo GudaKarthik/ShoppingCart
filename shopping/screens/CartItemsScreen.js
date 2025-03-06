@@ -13,19 +13,9 @@ const CartItemsScreen = () => {
         <View>
             <FlatList
             data={cart}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id}
             renderItem={({item}) => (
                 <CartItem item={item} />
-                // <View >
-                //     <Image
-                //       source={{uri:buyNowProduct.image}}
-                //       style={styles.image}
-                    
-                //      />
-                //     <Text >{item.title}</Text>
-                //     <Text >₹ {item.price}</Text>
-                //     <Text>Quantitys {item.quantity}</Text>
-                // </View>
             )}
             >
 
@@ -37,6 +27,9 @@ const CartItemsScreen = () => {
 export default CartItemsScreen;
 
 const CartItem = ({item}) => {
+
+    const { deleteProduct } = useContext(CartContext)
+
     return(
        <View>
         <View style={styles.cartitem}>
@@ -45,10 +38,16 @@ const CartItem = ({item}) => {
             style={styles.image}
             />
             <View>
-                <Text style={styles.title}>{item.title.substring(0,25)}</Text>
+                <Text style={styles.title}>{item.title.substring(0,24)}</Text>
                 <Text style={styles.price}>₹ {item.price}</Text>
                 <Text style={styles.quantity}>Quantity {item.quantity}</Text>
             </View>
+
+            <Text style={styles.removeItem}
+            onPress={() => {
+                deleteProduct(item)
+            }}
+            >X</Text>
 
         </View>
        </View>
@@ -58,10 +57,13 @@ const CartItem = ({item}) => {
 const styles = StyleSheet.create({
     cartitem:{
         flexDirection:'row',
-        margin:10,
+        marginTop:10,
+        marginLeft:10,
+        marginRight:10,
         backgroundColor:'white',
         borderRadius:15,borderWidth:0.5,
-        borderColor:'lightgray'
+        borderColor:'lightgray',
+        justifyContent:'space-between'
     },
 
     cartview:{
@@ -73,14 +75,12 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         fontSize:17,
         marginTop:15,
-        marginLeft:15
     },
     price :{
         color:'black',
         fontWeight:'600',
         fontSize:17,
         marginTop:15,
-        marginLeft:15
     },
     image:{
         width:100,
@@ -92,7 +92,13 @@ const styles = StyleSheet.create({
     quantity:{
         fontSize:13,
         fontWeight:'400',
-        marginLeft:15,
         marginTop:15
+    },
+
+    removeItem : {
+        marginRight:10,
+        marginTop:15,
+        color:'red',
+        fontWeight:'bold',
     }
 })

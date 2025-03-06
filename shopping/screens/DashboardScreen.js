@@ -126,12 +126,12 @@ const styles = StyleSheet.create({
 
   offerText : {
     margin:10,
-    borderColor:'white',
+    borderColor:'#0096FF',
     borderWidth:3,
     borderRadius:15,
     padding:10,
-    backgroundColor:'orange',
-    color:'white',
+    backgroundColor:'',
+    color:'#0096FF',
     fontWeight:'bold',
     fontSize:14
   },
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     marginBottom:10
   },
   gotCartbtn : {
-    backgroundColor:'green',
+    backgroundColor:'#00C000',
     borderRadius:20,
     padding:5,
     marginRight:10,

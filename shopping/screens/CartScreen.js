@@ -5,7 +5,7 @@ import { CartContext } from "../context/CartProvider";
 
 const CartScreen = () => {
 
-    const { cart, removeItem, buyNowProduct } = useContext(CartContext);
+    const { buyNowProduct } = useContext(CartContext);
 
     return (
         <View style={{flex:1,backgroundColor:'#f2f2fc'}}>
@@ -39,8 +39,8 @@ const CartScreen = () => {
 
 <Text style={{fontSize:17,margin:10,fontWeight:'600'}}>Expected delivery by 23rd January</Text>
 
-<TouchableOpacity style={{backgroundColor:'yellow',borderRadius:10,margin:10}}>
-        <Text style={{fontSize:15,fontWeight:'500',color:'black',alignSelf:'center',padding:10,borderRadius:20}}>
+<TouchableOpacity style={styles.proceedtobuybg}>
+        <Text style={styles.proceedtobuyText}>
             Proceed To Buy
         </Text>
     </TouchableOpacity>
@@ -79,5 +79,19 @@ const styles = StyleSheet.create({
         width:170,
         height:170,
         marginTop:15
+    },
+
+    proceedtobuybg : {
+        backgroundColor:'green',
+        borderRadius:30,
+        margin:10
+    },
+
+    proceedtobuyText : {
+        fontSize:15,
+        fontWeight:'500',
+        color:'white',
+        alignSelf:'center',
+        padding:10
     }
 })
