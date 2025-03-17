@@ -106,6 +106,7 @@ const ShoppingScreen = ({route,navigation}) => {
                 searchFilterFunction()
             }}
             >
+
             <Text style={styles.searchText}>🔍</Text>
             </TouchableOpacity>
             </View>
@@ -129,6 +130,7 @@ const ShoppingScreen = ({route,navigation}) => {
             contentContainerStyle={{ paddingBottom: 30 }}
             numColumns={2}
             renderItem={({item}) =>(
+                
                 <ProductItem props={item}
                 navigation={navigation}
                
@@ -165,12 +167,23 @@ const CategoryBasedFilters = ({item,filterItems}) => {
 
     const [count, setCount] = useState(0)
     const [counter,showCounter] = useState(false)
-    const { addProduct,deleteProduct,increment } = useContext(CartContext);
+    const { addProduct,deleteProduct,increment,cartItemCount, incrementCartCount, decrementCartCount,addToCart } = useContext(CartContext);
+
+    const counts = cartItemCount[props.id] || 0
+
+    useEffect(() => {
+        if(counts != 0){
+            showCounter(true)
+        }else{
+            showCounter(false)
+        }
+    })
 
     return(
         <View
         style={styles.productItem_bg}>
-
+               
+            
             <TouchableOpacity
             onPress={() => {
                 navigation.navigate('ShoppingItem',{
@@ -200,9 +213,9 @@ const CategoryBasedFilters = ({item,filterItems}) => {
                      <TouchableOpacity
                      onPress={() => {
                         // addProduct()
-                        
+                        incrementCartCount(props.id)
                          showCounter(true)
-                        setCount(count + 1)
+                    //    setCount(count + 1)
                      }}
                      style={[styles.addToCart_bg,{display: counter ? 'none' : 'flex'}]}>
                         <Text style={styles.addToCartText}>Add</Text>
@@ -218,20 +231,24 @@ const CategoryBasedFilters = ({item,filterItems}) => {
                                 showCounter(false)
                                 setCount(0)
                             }else{
+                                decrementCartCount(props.id)
                                 // deleteProduct()
-                               setCount((prev) => prev - 1)
+                            //   setCount((prev) => prev - 1)
                             }
                          }}
                          style={styles.counterTextValue}>-</Text>
 
                          {/* Counter Value */}
-                         <Text style={styles.counterTextValue}>{count}</Text>
+                         <Text style={styles.counterTextValue}>{counts}</Text>
 
                          {/* Increment Product */}
                          <Text
                          onPress={() => {
                             // addProduct(props.id)
-                            setCount((prev) => prev+1)
+                         //   setCount((prev) => prev+1)
+                         incrementCartCount(props.id)
+                         props["quantity"] = counts
+                         addToCart(props)
                          }}
                          style={styles.counterTextValue}>+</Text>
 

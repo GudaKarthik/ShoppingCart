@@ -23,24 +23,28 @@ const ShoppingItemScreen = ({route}) => {
     const [counter,showCounter] = useState(false)
     const [count, setCount] = useState(1)
     // Use Context Values
-    const { cart, addItem,addToCart } = useContext(CartContext);
+    const { cart, addItem,addToCart,cartItemCount, incrementCartCount, decrementCartCount } = useContext(CartContext);
+    const counts = cartItemCount[product.id] || 0
 
 
     // Total Price
-    const totalprice = useMemo(() => calculatePrice(price,count),[price,count])
+    const totalprice = useMemo(() => calculatePrice(price,counts),[price,count])
 
     // Calcluating Price
     function calculatePrice(price,quantity) {
+        console.log("Calculation Done")
         return price * quantity
     }
 
     // Product Item
     useEffect(() => {
 
-        if(counterValue){
+        if(cartItemCount != 0){
             showCounter(true)
-            setCount(counterValue)
+        //    setCount(counterValue)
         }
+
+        console.log("The cart item count is " + JSON.stringify(cartItemCount))
 
         // Product Details
         axios.get(url)
@@ -120,8 +124,8 @@ const ShoppingItemScreen = ({route}) => {
             <TouchableOpacity style={[styles.cartbutton,{display:!counter ? 'flex' : 'none'}]}
             onPress={() => {
                 showCounter(true)
-                setCount(count)
-                
+            //    setCount(count)
+              incrementCartCount(product.id)  
                 addToCart(product)
             }}
             >
@@ -136,10 +140,11 @@ const ShoppingItemScreen = ({route}) => {
                     {/* Decrement Value */}
                     <TouchableOpacity
                     onPress={() =>{
-                        setCount((prev) => prev - 1)
-                        if(count == 1){
+                     //   setCount((prev) => prev - 1)
+                     decrementCartCount(product.id)
+                        if(counts == 1){
                             showCounter(false)
-                            setCount(1)
+                        //    setCount(1)
                         }
                     }}
                     >
@@ -147,12 +152,13 @@ const ShoppingItemScreen = ({route}) => {
                     </TouchableOpacity>
 
                     {/* Counter Value */}
-                    <Text style={styles.counterText}>{count}</Text>
+                    <Text style={styles.counterText}>{counts}</Text>
 
                     {/* Increment Value */}
                     <TouchableOpacity
                     onPress={() =>{
-                        setCount((prev) => prev + 1)
+                        incrementCartCount(product.id)
+                    //    setCount((prev) => prev + 1)
                     }}
                     >
                     <Text style={styles.incrementText}>+</Text>
@@ -163,8 +169,9 @@ const ShoppingItemScreen = ({route}) => {
                 {/* Go to Cart */}
                 <TouchableOpacity style={[styles.gotCartbtn,{display: counter ? 'flex' : 'none'}]}
                 onPress={() => {
-                    product["quantity"] = count
+                    product["quantity"] = counts
                     setProduct(product)
+                    addToCart(product)
                     console.log("Product "+ JSON.stringify(product))
                     navigation.navigate("Cartitems")
                 }}>
@@ -188,6 +195,7 @@ const ShoppingItemScreen = ({route}) => {
                   horizontal={true}
                   keyExtractor={(item) => item.id.toString()}
                   renderItem={({item}) =>(
+
                     <MoreLikeThisProducts
                     item={item}
                     navigation={navigation}

@@ -1,32 +1,61 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { View, Text, FlatList,Image,TouchableOpacity,StyleSheet } from "react-native";
 import { useContext,useState } from "react";
 import { CartContext } from "../context/CartProvider";
 
 const CartItemsScreen = () => {
 
-    const { cart } = useContext(CartContext);
+    const { cart, deleteProduct ,totalPrice, getTotalPrice } = useContext(CartContext);
 
-    console.log("Cart Items " + JSON.stringify(cart));
+    const [price,setPrice] = useState(0)
+    const [pricevisibility, setPriceVisibility ] = useState(true)
+
+
+    useEffect(() => {
+
+        if(cart.length == 0){
+            setPriceVisibility(false)
+        }
+
+        cart.map((item) => {
+          setPrice((prev) => prev+item.price);
+        })
+        console.log("Cart Items are " + JSON.stringify(cart))
+    },[cart,pricevisibility])
 
     return(
         <View>
+
             <FlatList
             data={cart}
             keyExtractor={(item) => item.id}
             renderItem={({item}) => (
-                <CartItem item={item} />
+                <CartItem item={item}
+                deleteProducts={() => {
+                    deleteProduct(item)
+                    setPrice(0)
+                }}
+                 />
             )}
             >
 
             </FlatList>
+
+            <View style={[styles.priceview,{display : pricevisibility ? 'flex' : 'none'}]}>
+
+            <Text style={styles.textTotalprice}>Total Price</Text>
+            
+            <Text style={styles.totalPrice}>₹ {price} {getTotalPrice}</Text>
+
+            </View>
+
         </View>
     )
 }
 
 export default CartItemsScreen;
 
-const CartItem = ({item}) => {
+const CartItem = ({item,deleteProducts}) => {
 
     const { deleteProduct } = useContext(CartContext)
 
@@ -45,7 +74,7 @@ const CartItem = ({item}) => {
 
             <Text style={styles.removeItem}
             onPress={() => {
-                deleteProduct(item)
+                deleteProducts()
             }}
             >X</Text>
 
@@ -100,5 +129,23 @@ const styles = StyleSheet.create({
         marginTop:15,
         color:'red',
         fontWeight:'bold',
+    },
+
+    priceview : {
+        flexDirection:'row',
+        justifyContent:'space-between'
+    },
+
+    textTotalprice : {
+        fontSize:17,
+        marginLeft:10,
+        marginTop:10
+    },
+
+    totalPrice : {
+        marginTop:10,
+        marginRight:10,
+        fontSize:17,
+        fontWeight:'bold'
     }
 })
