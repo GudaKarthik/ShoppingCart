@@ -12,7 +12,7 @@ const DashboardScreen = () => {
     const url = "https://fakestoreapi.com/products";
     const [products, setProducts] = useState([]);
     const [limit, setLimit] = useState(5)
-    const { cart } = useContext(CartContext);
+    const { cart,logout } = useContext(CartContext);
     const [cartButton,showCartButton] = useState(false);
 
     // Fetching Data from API
@@ -74,6 +74,15 @@ const DashboardScreen = () => {
           />
         )}
       />
+
+      {/* Logout Button */}
+      <TouchableOpacity style={styles.logoutbtn} onPress={() => {
+        logout()
+      }}>
+        <Text style={styles.logoutText}>
+          Log Out
+        </Text>
+      </TouchableOpacity>
       
 </ScrollView>
     </View>
@@ -191,5 +200,20 @@ cartText : {
     color:'white',
     fontWeight:'700',
     alignSelf:'center'
+},
+
+logoutbtn : {
+  marginLeft:15,
+  marginRight:15,
+  marginTop:15,
+  marginBottom:25,
+  backgroundColor : 'red',
+  borderRadius:20
+},
+logoutText : {
+  color:'white',
+  fontWeight:'700',
+  alignSelf:'center',
+  padding:10
 }
 });

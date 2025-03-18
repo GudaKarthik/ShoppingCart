@@ -1,10 +1,57 @@
 import React, { useEffect } from "react";
 import { createContext } from "react";  
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 export const CartContext = createContext();
 
 const CartProvider = ({children}) => {
+
+    const [isLoading,setIsLoading] = useState(false)
+    const [userToken, setUserToken] = useState(null)
+
+    const login = (username,password) => {
+        axios.post('https://fakestoreapi.com/auth/login',{
+            username,
+            password
+        })
+        .then((response) => {
+            setUserToken(response.token)
+            setIsLoading(false)
+            AsyncStorage.setItem('Auth',response.token) 
+            console.log("The response is "+ response)
+        })
+        .catch((error) => {
+            console.log("Error is " + error)
+        })
+       
+    }
+
+    function logout() {
+        setUserToken(null)
+        AsyncStorage.setItem('Auth')
+        setIsLoading(false)
+    }
+
+    const isLoggedIn = async() => {
+        try{
+            setIsLoading(true)
+            let token = await AsyncStorage.getItem('Auth')
+
+            if(token){
+                setUserToken(token)
+            }
+
+            setIsLoading(false)
+        }catch(e){
+            console.log("isLoggedIn error is " + e)
+        }
+    }
+
+    useEffect(() => {
+        isLoggedIn
+    },[])
 
     // Cart List
     const [cart, setCart] = useState([]);
@@ -65,7 +112,9 @@ const CartProvider = ({children}) => {
     }
 
     return(
-        <CartContext.Provider value={{cart,addItem,increment,addToCart,deleteProduct,buyNowProduct,getTotalPrice,totalPrice,cartItemCount,incrementCartCount,decrementCartCount}}>
+        <CartContext.Provider value={{cart,addItem,increment,addToCart,deleteProduct,
+        buyNowProduct,getTotalPrice,totalPrice,cartItemCount,incrementCartCount,
+        decrementCartCount,isLoading,userToken,login,logout}}>
             {children}
         </CartContext.Provider>
     )

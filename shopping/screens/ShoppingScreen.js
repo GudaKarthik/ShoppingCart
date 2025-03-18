@@ -197,7 +197,6 @@ const CategoryBasedFilters = ({item,filterItems}) => {
                      <Image
                      source={{uri:props.image}}
                      style={styles.productitemImage}
-                     
                      />
 
                      <View style={{width:'100%',height:'0.1%',backgroundColor:'black',marginTop:10}}></View>

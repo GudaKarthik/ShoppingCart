@@ -10,28 +10,21 @@ import CartScreen from './screens/CartScreen';
 import AllProductsScreen from './screens/AllProductsScreen';
 import CartProvider from './context/CartProvider';
 import CartItemsScreen from './screens/CartItemsScreen';
+import LoginScreen from './screens/LoginScreen';
+import AppNavigator from './navigation/AppNavigator';
 
-
-export default function App() {
-
+const App = () => {
 
   const Stack = createNativeStackNavigator();
 
 
   return (
     <CartProvider>
-    <NavigationContainer>
-    
-    <Stack.Navigator initialRouteName='Dashboard'>
-      <Stack.Screen name="Dashboard" component={DashboardScreen} />
-      <Stack.Screen name="Shopping" component={ShoppingScreen} />
-      <Stack.Screen name='ShoppingItem'component={ShoppingItemScreen} />
-      <Stack.Screen name='AllPR'component={AllProductsScreen} />
-      <Stack.Screen name='Cart'component={CartScreen} />
-      <Stack.Screen name='Cartitems' component={CartItemsScreen}/>
-    </Stack.Navigator>
-    </NavigationContainer>
+
+    <AppNavigator />
+
     </CartProvider>
   );
 }
 
+export default App;
