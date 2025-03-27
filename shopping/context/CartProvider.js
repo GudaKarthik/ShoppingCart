@@ -38,7 +38,6 @@ const CartProvider = ({children}) => {
         try{
             setIsLoading(true)
             let token = await AsyncStorage.getItem('Auth')
-
             if(token){
                 setUserToken(token)
             }

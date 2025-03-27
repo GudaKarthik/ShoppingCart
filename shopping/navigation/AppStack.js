@@ -7,6 +7,7 @@ import ShoppingItemScreen from '../screens/ShoppingItemScreen';
 import AllProductsScreen from '../screens/AllProductsScreen';
 import CartScreen from '../screens/CartScreen';
 import CartItemsScreen from '../screens/CartItemsScreen';
+import AddProductScreen from '../screens/AddProductScreen';
 
  const AppStack = () => {
 
@@ -25,6 +26,7 @@ import CartItemsScreen from '../screens/CartItemsScreen';
       <Stack.Screen name='AllPR'component={AllProductsScreen} />
       <Stack.Screen name='Cart'component={CartScreen} />
       <Stack.Screen name='Cartitems' component={CartItemsScreen}/>
+      <Stack.Screen name='AddProduct' component={AddProductScreen} />
     </Stack.Navigator>
     
     // </NavigationContainer>

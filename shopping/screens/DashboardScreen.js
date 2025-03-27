@@ -43,8 +43,6 @@ const DashboardScreen = () => {
   return (
     <View style={styles.container}>
 
-      
-
       <ScrollView>
 
       <Text style={styles.offerText}>Big Sale is live! 50% Off on any item above ₹ 199</Text>

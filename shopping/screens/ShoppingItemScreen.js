@@ -15,7 +15,7 @@ const ShoppingItemScreen = ({route}) => {
     const { id,category, counterValue } = route.params;
     const url = "https://fakestoreapi.com/products/" + id
     const categoryUrl = 'https://fakestoreapi.com/products/category/' + category
-    const [price,setPrice] = useState()
+    const [price,setPrice] = useState(1)
     const [value,setValue] = useState(false)
     
     const [limitedProducts,setLimitedProducts] = useState([])
@@ -24,11 +24,11 @@ const ShoppingItemScreen = ({route}) => {
     const [count, setCount] = useState(1)
     // Use Context Values
     const { cart, addItem,addToCart,cartItemCount, incrementCartCount, decrementCartCount } = useContext(CartContext);
-    const counts = cartItemCount[product.id] || 0
+    const counts = cartItemCount[product.id] ?? 0
 
 
     // Total Price
-    const totalprice = useMemo(() => calculatePrice(price,counts),[price,count])
+    const totalprice = useMemo(() => (counts > 0 ? calculatePrice(price, counts) : price), [price, counts]);
 
     // Calcluating Price
     function calculatePrice(price,quantity) {
@@ -39,12 +39,12 @@ const ShoppingItemScreen = ({route}) => {
     // Product Item
     useEffect(() => {
 
-        if(cartItemCount != 0){
+        console.log("The cart item count is " + JSON.stringify(counts))
+
+        if(counts > 0){
             showCounter(true)
-        //    setCount(counterValue)
         }
 
-        console.log("The cart item count is " + JSON.stringify(cartItemCount))
 
         // Product Details
         axios.get(url)
@@ -73,7 +73,7 @@ const ShoppingItemScreen = ({route}) => {
         })
 
 
-    },[cartItem])
+    },[cartItem,cartItemCount[product.id]])
 
     // Remove the product if exist
     const filteredProducts = useMemo(() => {
@@ -103,7 +103,7 @@ const ShoppingItemScreen = ({route}) => {
             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             
             {/* Price */}
-            <Text style={styles.price}>Price : ₹{totalprice}</Text>
+            <Text style={styles.price}>Price : ₹{totalprice.toFixed(2)}</Text>
             
             </View>
 

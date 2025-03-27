@@ -33,6 +33,18 @@ const ShoppingScreen = ({route,navigation}) => {
     // Products API
     useEffect(() => {
 
+        navigation.setOptions({
+            headerRight: () => (
+              <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('AddProduct')
+              }}
+              >
+                <Text style={{fontSize:22,fontWeight:'500'}} >+</Text>
+              </TouchableOpacity>
+            ),
+          });
+
         if(category != "All"){
             // Products Based on Category
             url = "https://fakestoreapi.com/products/category/" + category;
@@ -92,7 +104,7 @@ const ShoppingScreen = ({route,navigation}) => {
 
             {/* Search Products     */}
             <TextInput
-            placeholder="Enter product name"
+            placeholder="Enter products name"
             style={styles.searchbackground}
             onChangeText={(text) => {
                 setSearch(text)
@@ -213,7 +225,7 @@ const CategoryBasedFilters = ({item,filterItems}) => {
                      onPress={() => {
                         // addProduct()
                         incrementCartCount(props.id)
-                         showCounter(true)
+                        showCounter(true)
                     //    setCount(count + 1)
                      }}
                      style={[styles.addToCart_bg,{display: counter ? 'none' : 'flex'}]}>
