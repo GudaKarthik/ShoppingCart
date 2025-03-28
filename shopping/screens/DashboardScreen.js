@@ -5,15 +5,19 @@ import { useNavigation } from '@react-navigation/native';
 import CategoryDashboard from "./helperComponents/CategoryDashboard";
 import { useContext } from "react";
 import { CartContext } from "../context/CartProvider";
+import { useDispatch } from "react-redux";
+import { logout } from "../login/loginSlice";
 
 const DashboardScreen = () => {
 
+  
     const navigation = useNavigation();
     const url = "https://fakestoreapi.com/products";
     const [products, setProducts] = useState([]);
     const [limit, setLimit] = useState(5)
-    const { cart,logout } = useContext(CartContext);
+    const { cart,logouts } = useContext(CartContext);
     const [cartButton,showCartButton] = useState(false);
+    const dispatch = useDispatch()
 
     // Fetching Data from API
     useEffect(() => {
@@ -75,7 +79,8 @@ const DashboardScreen = () => {
 
       {/* Logout Button */}
       <TouchableOpacity style={styles.logoutbtn} onPress={() => {
-        logout()
+      //  logout()
+      dispatch(logout())
       }}>
         <Text style={styles.logoutText}>
           Log Out

@@ -18,7 +18,6 @@ import AddProductScreen from '../screens/AddProductScreen';
   return (
     
     // <NavigationContainer>
-    
     <Stack.Navigator initialRouteName='Dashboard'>
       <Stack.Screen name="Dashboard" component={DashboardScreen} />
       <Stack.Screen name="Shopping" component={ShoppingScreen} />

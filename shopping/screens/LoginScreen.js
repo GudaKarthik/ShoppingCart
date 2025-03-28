@@ -3,14 +3,18 @@ import axios from "axios";
 import React, { useContext, useEffect,useState } from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { CartContext } from "../context/CartProvider";
+import { useDispatch } from "react-redux";
+import { login } from "../login/loginSlice";
 
 
 const LoginScreen = () => {
 
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const { login } = useContext(CartContext)
+  //  const { login } = useContext(CartContext)
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+
 
     return(
         <View>
@@ -41,7 +45,9 @@ const LoginScreen = () => {
 
             <TouchableOpacity style={{margin:15,backgroundColor:'green',borderRadius:15}}
             onPress={() => {
-                login(userName,password)
+                // login(userName,password)
+                console.log("Log button")
+                dispatch(login({userName,password}));
             }}
             >
                 <Text style={{padding:10,alignSelf:'center',color:'white'}}>

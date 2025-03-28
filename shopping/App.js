@@ -12,6 +12,8 @@ import CartProvider from './context/CartProvider';
 import CartItemsScreen from './screens/CartItemsScreen';
 import LoginScreen from './screens/LoginScreen';
 import AppNavigator from './navigation/AppNavigator';
+import { Provider } from 'react-redux';
+import Store from './reduxStore/Store';
 
 const App = () => {
 
@@ -19,11 +21,14 @@ const App = () => {
 
 
   return (
+
+    <Provider store={Store}>
     <CartProvider>
 
     <AppNavigator />
 
     </CartProvider>
+    </Provider>
   );
 }
 
